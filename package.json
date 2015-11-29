@@ -1,0 +1,25 @@
+{
+  "name": "generator-grunt-h5",
+  "version": "0.0.1",
+  "description": "",
+  "files": [
+    "generators/app",
+    "generators/router"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "underscore": "^1.8.3",
+    "underscore.string": "^3.2.2",
+    "yeoman-generator": "^0.21.1",
+    "yosay": "^1.1.0"
+  }
+}
