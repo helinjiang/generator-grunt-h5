@@ -6,15 +6,30 @@
     "generators/app",
     "generators/router"
   ],
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "yeoman-generator"
   ],
-  "author": "",
-  "license": "MIT",
+  "author": {
+    "name": "helinjiang",
+    "email": "me@helinjiang.com",
+    "url": "http://www.helinjiang.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/helinjiang/generator-grunt-h5.git"
+  },
+  "bugs": {
+    "url": "https://github.com/helinjiang/generator-grunt-h5/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/helinjiang/generator-grunt-h5/blob/master/LICENSE"
+    }
+  ],
   "dependencies": {
     "chalk": "^1.1.1",
     "underscore": "^1.8.3",
