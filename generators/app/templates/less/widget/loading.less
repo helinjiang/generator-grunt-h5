@@ -1,0 +1,121 @@
+/*loading*/
+@imgPath: "../../../img";
+
+.loading {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  z-index: 9999999;
+
+  .loading-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 140px;
+    height: 140px;
+    margin-top: -120px;
+    margin-left: -70px;
+    background: rgba(0, 0, 0, .6);
+    border-radius: 5px;
+
+    div {
+      padding-top: 40px;
+      .ui-loading {
+        width: 30px;
+        height: 30px;
+        display: block;
+        margin: 0 auto;
+        background: url("@{imgPath}/loading.png") 0 0 no-repeat;
+        -webkit-background-size: 30px 30px;
+        -webkit-animation-name: ui-loading-anim;
+        -webkit-animation-duration: 1s;
+        -webkit-animation-iteration-count: infinite;
+        -webkit-animation-timing-function: step-start;
+      }
+    }
+    p {
+      color: #fff;
+      font-size: 16px;
+    }
+  }
+}
+
+@-webkit-keyframes ui-loading-anim {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  8.32% {
+    -webkit-transform: rotate(0deg);
+  }
+  8.33% {
+    -webkit-transform: rotate(30deg);
+  }
+  16.65% {
+    -webkit-transform: rotate(30deg);
+  }
+  16.66% {
+    -webkit-transform: rotate(60deg);
+  }
+  24.99% {
+    -webkit-transform: rotate(60deg);
+  }
+  25% {
+    -webkit-transform: rotate(90deg);
+  }
+  33.32% {
+    -webkit-transform: rotate(90deg);
+  }
+  33.33% {
+    -webkit-transform: rotate(120deg);
+  }
+  41.65% {
+    -webkit-transform: rotate(120deg);
+  }
+  41.66% {
+    -webkit-transform: rotate(150deg);
+  }
+  49.99% {
+    -webkit-transform: rotate(150deg);
+  }
+  50% {
+    -webkit-transform: rotate(180deg);
+  }
+  58.32% {
+    -webkit-transform: rotate(180deg);
+  }
+  58.33% {
+    -webkit-transform: rotate(210deg);
+  }
+  66.65% {
+    -webkit-transform: rotate(210deg);
+  }
+  66.66% {
+    -webkit-transform: rotate(240deg);
+  }
+  74.99% {
+    -webkit-transform: rotate(240deg);
+  }
+  75% {
+    -webkit-transform: rotate(270deg);
+  }
+  83.32% {
+    -webkit-transform: rotate(270deg);
+  }
+  83.33% {
+    -webkit-transform: rotate(300deg);
+  }
+  91.65% {
+    -webkit-transform: rotate(300deg);
+  }
+  91.66% {
+    -webkit-transform: rotate(330deg);
+  }
+  99.99% {
+    -webkit-transform: rotate(330deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}

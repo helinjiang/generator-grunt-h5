@@ -24,7 +24,7 @@ module.exports = generators.Base.extend({
     initializing: function () {
         //默认配置，从环境变量中读取
         this.defaultOption = {
-            user: process.env.USER || 'nodefaultuser', // TODO windows下是USERNAME，USER貌似没起作用
+            user: process.env.USERNAME || 'nodefaultuser', // TODO windows下是USERNAME，USER貌似没起作用
             appname: this._getValidAppName(path.basename(process.cwd()))
         };
 
@@ -91,12 +91,6 @@ module.exports = generators.Base.extend({
     },
 
     writing: function () {
-        //生成 html 页面
-        this.fs.copyTpl(
-            this.templatePath('index.html'),
-            this.destinationPath('src/index.html'),
-            this.userOption
-        );
 
         //生成 grunt 配置文件 Gruntfile.js
         this.fs.copy(
@@ -109,6 +103,38 @@ module.exports = generators.Base.extend({
             this.templatePath('_package.json'),
             this.destinationPath('package.json'),
             this.userOption
+        );
+
+
+        //生成 html 页面
+        this.fs.copyTpl(
+            this.templatePath('html/index.html'),
+            this.destinationPath('resource/html/index.html'),
+            this.userOption
+        );
+
+        //拷贝js
+        this.fs.copy(
+            this.templatePath('js/**/*'),
+            this.destinationPath('resource/js')
+        );
+
+        //拷贝css
+        this.fs.copy(
+            this.templatePath('css/**/*'),
+            this.destinationPath('resource/css')
+        );
+
+        //拷贝less
+        this.fs.copy(
+            this.templatePath('less/**/*'),
+            this.destinationPath('resource/less')
+        );
+
+        //拷贝img
+        this.fs.copy(
+            this.templatePath('img/**/*'),
+            this.destinationPath('resource/img')
         );
 
     },

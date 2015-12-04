@@ -1,30 +1,236 @@
 "use strict";
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     // Load multiple grunt tasks using globbing patterns
+    // https://www.npmjs.com/package/load-grunt-tasks
     require('load-grunt-tasks')(grunt, {
         scope: 'devDependencies'
     });
 
     // Display the elapsed execution time of grunt tasks
+    // https://www.npmjs.com/package/time-grunt
     require('time-grunt')(grunt);
 
     // project configuration
     grunt.initConfig({
+        // Metadata.
+        pkg: grunt.file.readJSON('package.json'),
 
-        // 通过connect任务，创建一个静态服务器
+        banner: '/*! <%= pkg.name %> - v<%= pkg.version %>\n' +
+        '* Copyright (c) <%= pkg.author.name %>;\n' +
+        '*/\n\n',
+
+        resourcePath: './resource',
+        distPath: './dist',
+        webRootPath: './dist',
+
+        // Clean files and folders
+        // https://www.npmjs.com/package/grunt-contrib-clean
+        clean: {
+            options: {
+                force: true
+            },
+            main: [
+                "<%= distPath %>",
+                "<%= webRootPath %>/*.html",
+                "<%= resourcePath %>/css/buildbyless/**/*.css"
+            ]
+        },
+
+        // Copy files and folders
+        // https://www.npmjs.com/package/grunt-contrib-copy
+        copy: {
+            img: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= resourcePath %>/img/',
+                    src: ['**/*'],
+                    dest: '<%= distPath %>/img/'
+                }]
+            },
+            js: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= resourcePath %>/js/lib/',
+                    src: ['**/*'],
+                    dest: '<%= distPath %>/js/lib/'
+                }]
+            },
+            html: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= resourcePath %>/html/',
+                    src: ['**/*.html'],
+                    dest: '<%= webRootPath %>'
+                }]
+            }
+        },
+
+        // Compile LESS files to CSS
+        // https://www.npmjs.com/package/grunt-contrib-less
+        less: {
+            main: {
+                files: [{
+                    expand: true,
+                    cwd: "<%= resourcePath %>/less/",
+                    src: ["**/*.less"],
+                    dest: "<%= resourcePath %>/css/buildbyless/",
+                    ext: ".css"
+                }]
+            }
+        },
+
+        // Concatenate files
+        // https://www.npmjs.com/package/grunt-contrib-concat
+        concat: {
+            options: {
+                banner: "<%= banner %>"
+            },
+            js: {
+                options: {
+                    separator: ';\n'
+                },
+                files: {
+                    '<%= distPath %>/js/all.js': [
+                        '<%= resourcePath %>/js/core/util.js',
+                        '<%= resourcePath %>/js/widget/loading.js',
+                        '<%= resourcePath %>/js/page/index.js'
+                    ]
+                }
+            },
+            css: {
+                files: {
+                    '<%= distPath %>/css/all.css': [
+                        '<%= resourcePath %>/css/normalize.css',
+                        '<%= resourcePath %>/css/other.css',
+                        '<%= resourcePath %>/css/buildbyless/common.css',
+                        '<%= resourcePath %>/css/buildbyless/widget.css',
+                        '<%= resourcePath %>/css/buildbyless/page.css'
+                    ]
+                }
+            }
+        },
+
+        // Validate files with JSHint
+        // https://www.npmjs.com/package/grunt-contrib-jshint
+        jshint: {
+            all: [
+                '<%= resourcePath %>/js/**/*.js',
+                '!<%= resourcePath %>/js/lib/*.js'
+            ]
+        },
+
+        // Minify files with UglifyJS
+        // https://www.npmjs.com/package/grunt-contrib-uglify
+        uglify: {
+            options: {
+                banner: "<%= banner %>"
+            },
+            main: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= distPath %>/js/',
+                    src: ['*.js'],
+                    dest: '<%= distPath %>/js/',
+                    ext: ".min.js"
+                }]
+            }
+        },
+
+        // Minify CSS
+        // https://www.npmjs.com/package/grunt-contrib-cssmin
+        cssmin: {
+            options: {
+                banner: "<%= banner %>"
+            },
+            main: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= distPath %>/css/',
+                    src: ['*.css'],
+                    dest: '<%= distPath %>/css/',
+                    ext: ".min.css"
+                }]
+            }
+        },
+
+        // Minify HTML
+        // https://www.npmjs.com/package/grunt-contrib-htmlmin
+        htmlmin: {
+            main: {
+                options: {
+                    removeComments: true,
+                    collapseWhitespace: true,
+                    minifyJS: true,
+                    minifyCSS: true
+                },
+                files: [{
+                    expand: true,
+                    cwd: '<%= webRootPath %>',
+                    src: ['*.html'],
+                    dest: '<%= webRootPath %>'
+                }]
+            }
+        },
+
+        // Minify images
+        // https://www.npmjs.com/package/grunt-contrib-imagemin
+        imagemin: {
+            main: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= distPath %>/img/',
+                    src: ['**/*.{png,jpg,jpeg}'],
+                    dest: '<%= distPath %>/img/'
+                }]
+            }
+        },
+
+        // deal with js or css link in html
+        // https://www.npmjs.com/package/grunt-htmlstamp
+        htmlstamp: {
+            dev: {
+                files: {
+                    '<%= webRootPath %>/index.html': [
+                        '<%= distPath %>/js/**/*.js',
+                        '!<%= distPath %>/js/lib/*.js',
+                        '<%= distPath %>/css/**/*.css'
+                    ]
+                }
+            }
+        },
+
+        // modify file content
+        // https://www.npmjs.com/package/grunt-file-modify
+        file_modify: {
+            removeDebug: {
+                options: {
+                    reg: {
+                        /**
+                         * remove line which including “//@debug”
+                         * console.log(s1); // @debug remove this line!
+                         */
+                        pattern: '[^\\n]+\\/\\/\\s*@\\s*debug.*'
+                    }
+                },
+                src: ['<%= distPath %>/js/all.js']
+            }
+        },
+
+        // Start a connect web server
+        // https://www.npmjs.com/package/grunt-contrib-connect
         connect: {
             options: {
-                port: 8000, // 服务器端口号，默认为8000
-                hostname: 'localhost', // 服务器地址(可以使用主机名localhost，也能使用IP)
-                base: './www-root' // 站点的根目录，物理路径(默认为Gruntfile.js所在目录，即值为".")
+                port: 8000,
+                hostname: 'localhost',
+                base: '<%= webRootPath %>'
             },
             livereload: {
                 options: {
-                    middleware: function(connect, options, middlewares) {
+                    middleware: function (connect, options, middlewares) {
                         /**
-                         * 使用connect-livereload模块，生成一个LiveReload脚本，并通过LiveReload脚本，让页面重新加载:
-                         * <script src="http://127.0.0.1:35729/livereload.js?snipver=1" type="text/javascript"></script>
+                         * Inject a live reload script tag into your page using connect-livereload.
+                         * Example: <script src="http://127.0.0.1:35729/livereload.js?snipver=1" type="text/javascript"></script>
                          */
                         var lrSnippet = require('connect-livereload')({
                             port: grunt.config.get('watch').client.options.livereload
@@ -36,26 +242,85 @@ module.exports = function(grunt) {
             }
         },
 
-        // 检测文件变更，用于开发环境
+        // Run predefined tasks whenever watched file patterns are added, changed or deleted
+        // https://www.npmjs.com/package/grunt-contrib-watch
         watch: {
-            // Gruntfile.js变更时：重新加载watch
+            js: {
+                files: ['<%= resourcePath %>/js/**/*.js'],
+                tasks: ['jshint', 'concat:js', 'copy:html', 'htmlstamp:dev']
+            },
+            css: {
+                files: ['<%= resourcePath %>/css/**/*.css'],
+                tasks: ['concat:css', 'copy:html', 'htmlstamp:dev']
+            },
+            less: {
+                files: ['<%= resourcePath %>/less/**/*.less'],
+                tasks: ['less']
+            },
+            image: {
+                files: ['<%= resourcePath %>/img/**/*'],
+                tasks: ['copy:img', 'imagemin']
+            },
+            html: {
+                files: ['<%= resourcePath %>/html/**/*.html'],
+                tasks: ['copy:html', 'htmlstamp:dev']
+            },
             configFiles: {
                 files: ['Gruntfile.js'],
                 options: {
                     reload: true
                 }
             },
-            // 这里的文件变化之后，自动调用LiveReload刷新浏览器
             client: {
                 options: {
-                    livereload: 35729 // LiveReload的端口号，默认为35729
+                    livereload: 35729 // default: 35729
                 },
-                files: ['<%=connect.options.base || "."%>/*.html']
+                files: ['<%= connect.options.base || "." %>/*.html']
             }
         }
 
     });
 
-    //创建服务器且免F5实时刷新页面
-    grunt.registerTask('default', ['connect', 'watch']);
+    // Live-reload task
+    grunt.registerTask('live', [
+        'connect',
+        'watch'
+    ]);
+
+    // Develop task
+    grunt.registerTask('dev', [
+        'clean:main',
+        'jshint',
+        'concat:js',
+        'copy:js',
+        'less',
+        'concat:css',
+        'copy:img',
+        'copy:html',
+        'htmlstamp:dev'
+    ]);
+
+    // Default task. Using it to write code with live-reload!
+    grunt.registerTask('default', [
+        'dev',
+        'live'
+    ]);
+
+    // Deploy task
+    grunt.registerTask('deploy', [
+        'clean:main',
+        'jshint',
+        'concat:js',
+        'file_modify:removeDebug',
+        'copy:js',
+        'uglify',
+        'less',
+        'concat:css',
+        'cssmin',
+        'copy:img',
+        'imagemin',
+        'copy:html',
+        'htmlstamp:dev',
+        'htmlmin'
+    ]);
 };
