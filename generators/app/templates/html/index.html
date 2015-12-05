@@ -20,8 +20,30 @@
 </head>
 
 <body>
-    <h1>Hello, <%= appname %></h1>
-    <p></p>
+    <div class="container">
+         <h1>Hello, <%= appname %></h1>
+
+        <table class="table">
+            <tr>
+                <th>index</th>
+                <th>content</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td><p class="css-in-head-blue"> .css-in-head-blue in head tag </p></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><p class="other-css-red"> .other-css-red in other.css</p></td>
+            </tr>
+        </table>
+
+        <div>
+            <img src="./img/dog.jpg" alt="Loading">
+        </div>
+    </div>
+   
+
 
     <script src="./js/lib/zepto.min.js"></script>
     <script src="./js/all.js"></script>
