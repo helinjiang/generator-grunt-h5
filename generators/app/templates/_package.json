@@ -1,6 +1,6 @@
 {
   "name": "<%= appname %>",
-  "version": "<%= version %>",
+  "version": "0.0.1",
   "description": "A application of <%= appname %>",
   "author": "<%= author %>",
   "devDependencies": {
@@ -13,8 +13,8 @@
     "grunt-contrib-cssmin": "^0.14.0",
     "grunt-contrib-htmlmin": "^0.6.0",
     "grunt-contrib-imagemin": "^1.0.0",
-    "grunt-contrib-jshint": "^0.11.3",
-    "grunt-contrib-less": "^1.1.0",
+    "grunt-contrib-jshint": "^0.11.3",<% if(stylesheet == "less"){ %>
+    "grunt-contrib-less": "^1.1.0",<% } %>
     "grunt-contrib-uglify": "^0.11.0",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-file-modify": "^0.2.1",

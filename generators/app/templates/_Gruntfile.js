@@ -16,8 +16,8 @@ module.exports = function (grunt) {
         // Metadata.
         pkg: grunt.file.readJSON('package.json'),
 
-        banner: '/*! <%= pkg.name %> - v<%= pkg.version %>\n' +
-        '* Copyright (c) <%= pkg.author.name %>;\n' +
+        banner: '/*! <%%= pkg.name %> - v<%%= pkg.version %>\n' +
+        '* Copyright (c) <%%= pkg.author.name %>;\n' +
         '*/\n\n',
 
         resourcePath: './resource',
@@ -31,9 +31,9 @@ module.exports = function (grunt) {
                 force: true
             },
             main: [
-                "<%= distPath %>",
-                "<%= webRootPath %>/*.html",
-                "<%= resourcePath %>/css/buildbyless/**/*.css"
+                "<%%= distPath %>",
+                "<%%= webRootPath %>/*.html"<% if(stylesheet == "less"){ %>,
+                "<%%= resourcePath %>/css/buildbyless/**/*.css"<%}%>
             ]
         },
 
@@ -43,28 +43,28 @@ module.exports = function (grunt) {
             img: {
                 files: [{
                     expand: true,
-                    cwd: '<%= resourcePath %>/img/',
+                    cwd: '<%%= resourcePath %>/img/',
                     src: ['**/*'],
-                    dest: '<%= distPath %>/img/'
+                    dest: '<%%= distPath %>/img/'
                 }]
             },
             js: {
                 files: [{
                     expand: true,
-                    cwd: '<%= resourcePath %>/js/lib/',
+                    cwd: '<%%= resourcePath %>/js/lib/',
                     src: ['**/*'],
-                    dest: '<%= distPath %>/js/lib/'
+                    dest: '<%%= distPath %>/js/lib/'
                 }]
             },
             html: {
                 files: [{
                     expand: true,
-                    cwd: '<%= resourcePath %>/html/',
+                    cwd: '<%%= resourcePath %>/html/',
                     src: ['**/*.html'],
-                    dest: '<%= webRootPath %>'
+                    dest: '<%%= webRootPath %>'
                 }]
             }
-        },
+        },<% if(stylesheet == "less"){ %>
 
         // Compile LESS files to CSS
         // https://www.npmjs.com/package/grunt-contrib-less
@@ -72,40 +72,40 @@ module.exports = function (grunt) {
             main: {
                 files: [{
                     expand: true,
-                    cwd: "<%= resourcePath %>/less/",
+                    cwd: "<%%= resourcePath %>/less/",
                     src: ["**/*.less"],
-                    dest: "<%= resourcePath %>/css/buildbyless/",
+                    dest: "<%%= resourcePath %>/css/buildbyless/",
                     ext: ".css"
                 }]
             }
-        },
+        },<%}%>
 
         // Concatenate files
         // https://www.npmjs.com/package/grunt-contrib-concat
         concat: {
             options: {
-                banner: "<%= banner %>"
+                banner: "<%%= banner %>"
             },
             js: {
                 options: {
                     separator: ';\n'
                 },
                 files: {
-                    '<%= distPath %>/js/all.js': [
-                        '<%= resourcePath %>/js/core/util.js',
-                        '<%= resourcePath %>/js/widget/loading.js',
-                        '<%= resourcePath %>/js/page/index.js'
+                    '<%%= distPath %>/js/all.js': [
+                        '<%%= resourcePath %>/js/core/util.js',
+                        '<%%= resourcePath %>/js/widget/loading.js',
+                        '<%%= resourcePath %>/js/page/index.js'
                     ]
                 }
             },
             css: {
                 files: {
-                    '<%= distPath %>/css/all.css': [
-                        '<%= resourcePath %>/css/normalize.css',
-                        '<%= resourcePath %>/css/other.css',
-                        '<%= resourcePath %>/css/buildbyless/common.css',
-                        '<%= resourcePath %>/css/buildbyless/widget.css',
-                        '<%= resourcePath %>/css/buildbyless/page.css'
+                    '<%%= distPath %>/css/all.css': [
+                        '<%%= resourcePath %>/css/normalize.css',
+                        '<%%= resourcePath %>/css/other.css',<% if(stylesheet == "less"){ %>
+                        '<%%= resourcePath %>/css/buildbyless/common.css',
+                        '<%%= resourcePath %>/css/buildbyless/widget.css',
+                        '<%%= resourcePath %>/css/buildbyless/page.css' <%}%>
                     ]
                 }
             }
@@ -115,8 +115,8 @@ module.exports = function (grunt) {
         // https://www.npmjs.com/package/grunt-contrib-jshint
         jshint: {
             all: [
-                '<%= resourcePath %>/js/**/*.js',
-                '!<%= resourcePath %>/js/lib/*.js'
+                '<%%= resourcePath %>/js/**/*.js',
+                '!<%%= resourcePath %>/js/lib/*.js'
             ]
         },
 
@@ -124,14 +124,14 @@ module.exports = function (grunt) {
         // https://www.npmjs.com/package/grunt-contrib-uglify
         uglify: {
             options: {
-                banner: "<%= banner %>"
+                banner: "<%%= banner %>"
             },
             main: {
                 files: [{
                     expand: true,
-                    cwd: '<%= distPath %>/js/',
+                    cwd: '<%%= distPath %>/js/',
                     src: ['*.js'],
-                    dest: '<%= distPath %>/js/',
+                    dest: '<%%= distPath %>/js/',
                     ext: ".min.js"
                 }]
             }
@@ -141,14 +141,14 @@ module.exports = function (grunt) {
         // https://www.npmjs.com/package/grunt-contrib-cssmin
         cssmin: {
             options: {
-                banner: "<%= banner %>"
+                banner: "<%%= banner %>"
             },
             main: {
                 files: [{
                     expand: true,
-                    cwd: '<%= distPath %>/css/',
+                    cwd: '<%%= distPath %>/css/',
                     src: ['*.css'],
-                    dest: '<%= distPath %>/css/',
+                    dest: '<%%= distPath %>/css/',
                     ext: ".min.css"
                 }]
             }
@@ -166,9 +166,9 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    cwd: '<%= webRootPath %>',
+                    cwd: '<%%= webRootPath %>',
                     src: ['*.html'],
-                    dest: '<%= webRootPath %>'
+                    dest: '<%%= webRootPath %>'
                 }]
             }
         },
@@ -179,9 +179,9 @@ module.exports = function (grunt) {
             main: {
                 files: [{
                     expand: true,
-                    cwd: '<%= distPath %>/img/',
+                    cwd: '<%%= distPath %>/img/',
                     src: ['**/*.{png,jpg,jpeg}'],
-                    dest: '<%= distPath %>/img/'
+                    dest: '<%%= distPath %>/img/'
                 }]
             }
         },
@@ -191,10 +191,10 @@ module.exports = function (grunt) {
         htmlstamp: {
             dev: {
                 files: {
-                    '<%= webRootPath %>/index.html': [
-                        '<%= distPath %>/js/**/*.js',
-                        '!<%= distPath %>/js/lib/*.js',
-                        '<%= distPath %>/css/**/*.css'
+                    '<%%= webRootPath %>/index.html': [
+                        '<%%= distPath %>/js/**/*.js',
+                        '!<%%= distPath %>/js/lib/*.js',
+                        '<%%= distPath %>/css/**/*.css'
                     ]
                 }
             }
@@ -213,7 +213,7 @@ module.exports = function (grunt) {
                         pattern: '[^\\n]+\\/\\/\\s*@\\s*debug.*'
                     }
                 },
-                src: ['<%= distPath %>/js/all.js']
+                src: ['<%%= distPath %>/js/all.js']
             }
         },
 
@@ -223,7 +223,7 @@ module.exports = function (grunt) {
             options: {
                 port: 8000,
                 hostname: 'localhost',
-                base: '<%= webRootPath %>'
+                base: '<%%= webRootPath %>'
             },
             livereload: {
                 options: {
@@ -246,23 +246,23 @@ module.exports = function (grunt) {
         // https://www.npmjs.com/package/grunt-contrib-watch
         watch: {
             js: {
-                files: ['<%= resourcePath %>/js/**/*.js'],
+                files: ['<%%= resourcePath %>/js/**/*.js'],
                 tasks: ['jshint', 'concat:js', 'copy:html', 'htmlstamp:dev']
             },
             css: {
-                files: ['<%= resourcePath %>/css/**/*.css'],
+                files: ['<%%= resourcePath %>/css/**/*.css'],
                 tasks: ['concat:css', 'copy:html', 'htmlstamp:dev']
-            },
+            },<% if(stylesheet == "less"){ %>
             less: {
-                files: ['<%= resourcePath %>/less/**/*.less'],
+                files: ['<%%= resourcePath %>/less/**/*.less'],
                 tasks: ['less']
-            },
+            },<%}%>
             image: {
-                files: ['<%= resourcePath %>/img/**/*'],
+                files: ['<%%= resourcePath %>/img/**/*'],
                 tasks: ['copy:img', 'imagemin']
             },
             html: {
-                files: ['<%= resourcePath %>/html/**/*.html'],
+                files: ['<%%= resourcePath %>/html/**/*.html'],
                 tasks: ['copy:html', 'htmlstamp:dev']
             },
             configFiles: {
@@ -275,7 +275,7 @@ module.exports = function (grunt) {
                 options: {
                     livereload: 35729 // default: 35729
                 },
-                files: ['<%= connect.options.base || "." %>/*.html']
+                files: ['<%%= connect.options.base || "." %>/*.html']
             }
         }
 
@@ -292,8 +292,8 @@ module.exports = function (grunt) {
         'clean:main',
         'jshint',
         'concat:js',
-        'copy:js',
-        'less',
+        'copy:js',<% if(stylesheet == "less"){ %>
+        'less',<%}%>
         'concat:css',
         'copy:img',
         'copy:html',
@@ -313,8 +313,8 @@ module.exports = function (grunt) {
         'concat:js',
         'file_modify:removeDebug',
         'copy:js',
-        'uglify',
-        'less',
+        'uglify',<% if(stylesheet == "less"){ %>
+        'less',<%}%>
         'concat:css',
         'cssmin',
         'copy:img',

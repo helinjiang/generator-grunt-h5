@@ -45,22 +45,9 @@ module.exports = generators.Base.extend({
             message: "What's the name of your app?",
             "default": this.defaultOption.appname
         }, {
-            name: 'version', // 版本
-            message: 'Version:',
-            default: '0.0.1'
-        }, {
             name: 'author', // 作者
             message: 'Author:',
             default: this.defaultOption.user
-        }, {
-            type: "list",
-            name: "type", // HTML5页面类型
-            "default": 0,
-            message: "Which type of html5 page do you want to use?",
-            choices: ["Basic", "PC"],
-            filter: function (val) {
-                return val.toLowerCase();
-            }
         }, {
             type: "list",
             name: "stylesheet", // 使用哪种stylesheet
@@ -93,9 +80,10 @@ module.exports = generators.Base.extend({
     writing: function () {
 
         //生成 grunt 配置文件 Gruntfile.js
-        this.fs.copy(
+        this.fs.copyTpl(
             this.templatePath('_Gruntfile.js'),
-            this.destinationPath('Gruntfile.js')
+            this.destinationPath('Gruntfile.js'),
+            this.userOption
         );
 
         //生成 node 配置文件 package.json
