@@ -193,17 +193,28 @@ module.exports = generators.Base.extend({
     },
 
     install: function () {
+        var str = "",
+            strInstall = "";
+
+        if (this.userOption.usebower) {
+            str = 'Grunt and Bower dependencies';
+            strInstall = "npm install & bower install";
+        } else {
+            str = 'Grunt dependencies';
+            strInstall = "npm install";
+        }
+
         // 如果有--lazy选项，则不再自动运行 npm install & bower install
         if (this.lazyInstall) {
-            this.log('You should run ' + chalk.blue('npm install & bower install') + ' yourself next!');
+            this.log('You should run ' + chalk.yellow(strInstall) + ' yourself to install the required dependencies!');
         } else {
-            this.log('Install Grunt plugins ... ');
+            this.log('Install ' + str + ' ... ');
 
-            // this.installDependencies({
-            //     callback: function () {
-            //         this.log('grunt 及其插件安装完毕。');
-            //     }.bind(this)
-            // });
+            this.installDependencies({
+                callback: function () {
+                    this.log('Install ' + str + ' success!');
+                }.bind(this)
+            });
         }
     },
 
