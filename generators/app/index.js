@@ -114,10 +114,12 @@ module.exports = generators.Base.extend({
         );
 
         //拷贝less
-        this.fs.copy(
-            this.templatePath('less/**/*'),
-            this.destinationPath('resource/less')
-        );
+        if (this.userOption.stylesheet == "less") {
+            this.fs.copy(
+                this.templatePath('less/**/*'),
+                this.destinationPath('resource/less')
+            );
+        }
 
         //拷贝img
         this.fs.copy(

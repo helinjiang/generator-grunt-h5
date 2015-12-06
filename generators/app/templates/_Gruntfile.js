@@ -197,6 +197,19 @@ module.exports = function (grunt) {
                         '<%%= distPath %>/css/**/*.css'
                     ]
                 }
+            },
+            deploy: {
+                options: {
+                    type: 'embed',
+                    appendType: 'hash'
+                },
+                files: {
+                    '<%%= webRootPath %>/index.html': [
+                        '<%%= distPath %>/js/**/*.js',
+                        '!<%%= distPath %>/js/lib/*.js',
+                        '<%%= distPath %>/css/**/*.css'
+                    ]
+                }
             }
         },
 
@@ -320,7 +333,7 @@ module.exports = function (grunt) {
         'copy:img',
         'imagemin',
         'copy:html',
-        'htmlstamp:dev',
+        'htmlstamp:deploy',
         'htmlmin'
     ]);
 };
