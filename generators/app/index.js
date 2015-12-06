@@ -57,6 +57,24 @@ module.exports = generators.Base.extend({
             filter: function (val) {
                 return val.toLowerCase();
             }
+        }, {
+            type: "list",
+            name: "cssdeploy", // 发布版本时，css以哪种方式引入
+            "default": 1,
+            message: "What would you like to deal html when deploy with css link?",
+            choices: ["Suffix", "Embed", "Inline"],
+            filter: function (val) {
+                return val.toLowerCase();
+            }
+        }, {
+            type: "list",
+            name: "jsdeploy", // 发布版本时，js以哪种方式引入
+            "default": 1,
+            message: "What would you like to deal html when deploy with javaScript link?",
+            choices: ["Suffix", "Embed", "Inline"],
+            filter: function (val) {
+                return val.toLowerCase();
+            }
         }];
 
         // 所有的用户参数结果存储于此
@@ -113,7 +131,7 @@ module.exports = generators.Base.extend({
             this.destinationPath('resource/css')
         );
 
-        //拷贝less
+        //拷贝less，只有在stylesheet=less时才拷贝
         if (this.userOption.stylesheet == "less") {
             this.fs.copy(
                 this.templatePath('less/**/*'),

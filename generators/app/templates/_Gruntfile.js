@@ -198,15 +198,25 @@ module.exports = function (grunt) {
                     ]
                 }
             },
-            deploy: {
+            deployJs: {
                 options: {
-                    type: 'embed',
+                    type: '<%=jsdeploy%>',
                     appendType: 'hash'
                 },
                 files: {
                     '<%%= webRootPath %>/index.html': [
                         '<%%= distPath %>/js/**/*.js',
-                        '!<%%= distPath %>/js/lib/*.js',
+                        '!<%%= distPath %>/js/lib/*.js'
+                    ]
+                }
+            },
+            deployCss: {
+                options: {
+                    type: '<%=cssdeploy%>',
+                    appendType: 'hash'
+                },
+                files: {
+                    '<%%= webRootPath %>/index.html': [
                         '<%%= distPath %>/css/**/*.css'
                     ]
                 }
@@ -333,7 +343,8 @@ module.exports = function (grunt) {
         'copy:img',
         'imagemin',
         'copy:html',
-        'htmlstamp:deploy',
+        'htmlstamp:deployJs',
+        'htmlstamp:deployCss',
         'htmlmin'
     ]);
 };
