@@ -18,7 +18,11 @@ module.exports = generators.Base.extend({
 
         generators.Base.apply(this, arguments)
 
-        //在这拿到传参和选项
+        // This method adds support for a `--coffee` flag
+        this.option('lazy', {"desc": "Do not npm install or brower insall."});
+
+        // And you can then access it later on this way; e.g.
+        this.lazyInstall = !!this.options.lazy;
     },
 
     initializing: function () {
@@ -38,7 +42,7 @@ module.exports = generators.Base.extend({
         var done = this.async();
 
         // 欢迎界面
-        console.log(yosay("Welcome to the " + (chalk.red("MyTest")) + " generator"));
+        console.log(yosay("Welcome to the " + chalk.red("GruntH5") + " generator"));
 
         var prompts = [{
             name: "appname", // 应用名称，最终会将生成小驼峰结果
@@ -147,19 +151,20 @@ module.exports = generators.Base.extend({
 
     },
 
-
     install: function () {
-        this.log('Install Grunt plugins ... ');
+        // 如果有--lazy选项，则不再自动运行 npm install & bower install
+        if (this.lazyInstall) {
+            this.log('You should run ' + chalk.blue('npm install & bower install') + ' yourself next!');
+        } else {
+            this.log('Install Grunt plugins ... ');
 
-        // this.installDependencies({
-        //     callback: function () {
-        //         this.log('grunt 及其插件安装完毕。');
-
-
-        //     }.bind(this)
-        // });
+            // this.installDependencies({
+            //     callback: function () {
+            //         this.log('grunt 及其插件安装完毕。');
+            //     }.bind(this)
+            // });
+        }
     },
-
 
     end: function () {
         //存储用户默认配置
