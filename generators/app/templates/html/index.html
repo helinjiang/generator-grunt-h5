@@ -9,7 +9,7 @@
 
     <link rel="shortcut icon" href="http://mat1.gtimg.com/www/icon/favicon2.ico"/>
 
-    <link rel="stylesheet" href="./css/all.css">
+    <link rel="stylesheet" href="<%= basePathInHtml %>/css/all.css">
 
     <style type="text/css">
         .css-in-head-blue{
@@ -39,17 +39,17 @@
         </table>
 
         <div>
-            <img src="./img/dog.jpg" alt="Loading">
+            <img src="<%= basePathInHtml %>/img/dog.jpg" alt="Loading">
         </div>
     </div>
    
 
     <% if(usebower){ %>
-    <script src="./js/lib/jquery.min.js"></script>
+    <script src="<%= basePathInHtml %>/js/lib/jquery.min.js"></script>
     <% } else { %>
-    <script src="./js/lib/jquery-1.11.3.min.js"></script>
+    <script src="<%= basePathInHtml %>/js/lib/jquery-1.11.3.min.js"></script>
     <% } %>
-    <script src="./js/all.js"></script>
+    <script src="<%= basePathInHtml %>/js/all.js"></script>
 
     <script>
         console.log("Hello, world!");

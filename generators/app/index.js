@@ -50,9 +50,21 @@ module.exports = generators.Base.extend({
             message: 'Author:',
             default: this.defaultOption.user
         }, {
+            name: 'srcpath', // 构建之前源代码文件夹名称
+            message: "Where's the source code path?",
+            default: 'resource'
+        }, {
+            name: 'distpath', // 构建后的文件夹名称
+            message: "Where's the build path?",
+            default: 'dist'
+        }, {
+            name: 'webrootpath', // 构建后的文件夹名称
+            message: "Where's the web server root path?",
+            default: 'dist'
+        }, {
             type: "list",
             name: "stylesheet", // 使用哪种stylesheet
-            "default": 0,
+            "default": 1,
             message: "What would you like to write stylesheets with?",
             choices: ["CSS", "Less"],
             filter: function (val) {
@@ -92,6 +104,14 @@ module.exports = generators.Base.extend({
             // 对appname进行处理，不能包括空格等
             this.userOption.appname = this._getValidAppName(this.userOption.appname);
 
+            // 处理这三个path
+            this.userOption.srcpath = this._getNormalizePath(this.userOption.srcpath);
+            this.userOption.distpath = this._getNormalizePath(this.userOption.distpath);
+            this.userOption.webrootpath = this._getNormalizePath(this.userOption.webrootpath);
+
+            // html中的js\css\image相对于html的地址
+            this.userOption.basePathInHtml = this._getNormalizePath(this._getRelativePath(this.userOption.webrootpath, this.userOption.distpath));
+
             // 遍历展现用户选择的结果
             // for (var key in this.userOption) {
             //     this.log(this.userOption[key]);
@@ -102,6 +122,7 @@ module.exports = generators.Base.extend({
     },
 
     writing: function () {
+        var basePath = this.userOption.srcpath;
 
         // 生成 grunt 配置文件 Gruntfile.js
         this.fs.copyTpl(
@@ -121,34 +142,34 @@ module.exports = generators.Base.extend({
         // 生成 html 页面
         this.fs.copyTpl(
             this.templatePath('html/index.html'),
-            this.destinationPath('resource/html/index.html'),
+            this.destinationPath(basePath + '/html/index.html'),
             this.userOption
         );
 
         // 拷贝js
         this.fs.copy(
             this.templatePath('js/**/*'),
-            this.destinationPath('resource/js')
+            this.destinationPath(basePath + '/js')
         );
 
         // 拷贝css
         this.fs.copy(
             this.templatePath('css/**/*'),
-            this.destinationPath('resource/css')
+            this.destinationPath(basePath + '/css')
         );
 
         // 拷贝less，只有在stylesheet=less时才拷贝
         if (this.userOption.stylesheet == "less") {
             this.fs.copy(
                 this.templatePath('less/**/*'),
-                this.destinationPath('resource/less')
+                this.destinationPath(basePath + '/less')
             );
         }
 
         // 拷贝img
         this.fs.copy(
             this.templatePath('img/**/*'),
-            this.destinationPath('resource/img')
+            this.destinationPath(basePath + '/img')
         );
 
         // 生成Bower相关文件
@@ -166,7 +187,7 @@ module.exports = generators.Base.extend({
             // 不使用bower时，再拷贝外部库到js/lib下面
             this.fs.copy(
                 this.templatePath('lib/**/*'),
-                this.destinationPath('resource/js/lib')
+                this.destinationPath(basePath + '/js/lib')
             );
         }
     },
@@ -195,5 +216,13 @@ module.exports = generators.Base.extend({
 
     _getValidAppName: function (name) {
         return _.camelize(_.slugify(_.humanize(name)));
+    },
+
+    _getNormalizePath: function (name) {
+        return path.normalize(name).replace(/\\/g, "/");
+    },
+
+    _getRelativePath: function (from, to) {
+        return path.relative(from, to).replace(/\\/g, "/");
     }
 });

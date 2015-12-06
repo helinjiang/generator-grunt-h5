@@ -20,9 +20,9 @@ module.exports = function (grunt) {
         '* Copyright (c) <%%= pkg.author.name %>;\n' +
         '*/\n\n',
 
-        resourcePath: './resource',
-        distPath: './dist',
-        webRootPath: './dist',
+        resourcePath: '<%= srcpath %>',
+        distPath: '<%= distpath %>',
+        webRootPath: '<%= webrootpath %>',
 
         // Clean files and folders
         // https://www.npmjs.com/package/grunt-contrib-clean

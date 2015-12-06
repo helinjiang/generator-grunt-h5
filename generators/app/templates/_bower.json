@@ -2,7 +2,7 @@
   "name": "<%= appname %>",
   "version": "0.0.1",
   "authors": "<%= author %>",
-  "main": "dist/index.html",
+  "main": "<%= webrootpath %>/index.html",
   "ignore": [
     "**/.*",
     "node_modules",
