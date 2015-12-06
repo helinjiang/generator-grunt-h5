@@ -11,9 +11,6 @@ var yosay = require("yosay");
 var _ = require("underscore.string");
 
 module.exports = generators.Base.extend({
-    method1: function () {
-        console.log('method 1 just ran');
-    },
     constructor: function () {
 
         generators.Base.apply(this, arguments)
@@ -79,6 +76,11 @@ module.exports = generators.Base.extend({
             filter: function (val) {
                 return val.toLowerCase();
             }
+        }, {
+            type: "confirm",
+            name: "usebower",
+            "default": true,
+            message: "Use Bower?"
         }];
 
         // 所有的用户参数结果存储于此
@@ -101,14 +103,14 @@ module.exports = generators.Base.extend({
 
     writing: function () {
 
-        //生成 grunt 配置文件 Gruntfile.js
+        // 生成 grunt 配置文件 Gruntfile.js
         this.fs.copyTpl(
             this.templatePath('_Gruntfile.js'),
             this.destinationPath('Gruntfile.js'),
             this.userOption
         );
 
-        //生成 node 配置文件 package.json
+        // 生成 node 配置文件 package.json
         this.fs.copyTpl(
             this.templatePath('_package.json'),
             this.destinationPath('package.json'),
@@ -116,26 +118,26 @@ module.exports = generators.Base.extend({
         );
 
 
-        //生成 html 页面
+        // 生成 html 页面
         this.fs.copyTpl(
             this.templatePath('html/index.html'),
             this.destinationPath('resource/html/index.html'),
             this.userOption
         );
 
-        //拷贝js
+        // 拷贝js
         this.fs.copy(
             this.templatePath('js/**/*'),
             this.destinationPath('resource/js')
         );
 
-        //拷贝css
+        // 拷贝css
         this.fs.copy(
             this.templatePath('css/**/*'),
             this.destinationPath('resource/css')
         );
 
-        //拷贝less，只有在stylesheet=less时才拷贝
+        // 拷贝less，只有在stylesheet=less时才拷贝
         if (this.userOption.stylesheet == "less") {
             this.fs.copy(
                 this.templatePath('less/**/*'),
@@ -143,12 +145,30 @@ module.exports = generators.Base.extend({
             );
         }
 
-        //拷贝img
+        // 拷贝img
         this.fs.copy(
             this.templatePath('img/**/*'),
             this.destinationPath('resource/img')
         );
 
+        // 生成Bower相关文件
+        if (this.userOption.usebower) {
+            //this.fs.copyTpl(
+            //    this.templatePath('_bower.json'),
+            //    this.destinationPath('bower.json'),
+            //    this.userOption
+            //);
+            // 这种写法等效于上面这种
+            this.template('_bower.json', 'bower.json', this.userOption);
+
+            this.template('bowerrc', '.bowerrc', this.userOption);
+        } else {
+            // 不使用bower时，再拷贝外部库到js/lib下面
+            this.fs.copy(
+                this.templatePath('lib/**/*'),
+                this.destinationPath('resource/js/lib')
+            );
+        }
     },
 
     install: function () {

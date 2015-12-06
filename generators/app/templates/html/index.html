@@ -44,8 +44,11 @@
     </div>
    
 
-
-    <script src="./js/lib/zepto.min.js"></script>
+    <% if(usebower){ %>
+    <script src="./js/lib/jquery.min.js"></script>
+    <% } else { %>
+    <script src="./js/lib/jquery-1.11.3.min.js"></script>
+    <% } %>
     <script src="./js/all.js"></script>
 
     <script>

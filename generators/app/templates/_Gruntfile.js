@@ -51,8 +51,8 @@ module.exports = function (grunt) {
             js: {
                 files: [{
                     expand: true,
-                    cwd: '<%%= resourcePath %>/js/lib/',
-                    src: ['**/*'],
+                    cwd: <% if(usebower){ %>'<%%= resourcePath %>/bower_components/jquery/dist/'<%}else{%>'<%%= resourcePath %>/js/lib/'<%}%>,
+                    src: ['jquery*.js'],
                     dest: '<%%= distPath %>/js/lib/'
                 }]
             },
@@ -115,8 +115,8 @@ module.exports = function (grunt) {
         // https://www.npmjs.com/package/grunt-contrib-jshint
         jshint: {
             all: [
-                '<%%= resourcePath %>/js/**/*.js',
-                '!<%%= resourcePath %>/js/lib/*.js'
+                '<%%= resourcePath %>/js/**/*.js'<% if(!usebower){ %>,
+                '!<%%= resourcePath %>/js/lib/*.js'<% } %>
             ]
         },
 
