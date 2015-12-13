@@ -1,3 +1,4 @@
+var fs = require("fs");
 var path = require("path");
 var generators = require('yeoman-generator');
 
@@ -13,7 +14,7 @@ var _ = require("underscore.string");
 module.exports = generators.Base.extend({
     constructor: function () {
 
-        generators.Base.apply(this, arguments)
+        generators.Base.apply(this, arguments);
 
         // This method adds support for a `--coffee` flag
         this.option('lazy', {"desc": "Do not npm install or brower insall."});
@@ -26,7 +27,7 @@ module.exports = generators.Base.extend({
         //默认配置，从环境变量中读取
         this.defaultOption = {
             user: process.env.USERNAME || 'nodefaultuser', // TODO windows下是USERNAME，USER貌似没起作用
-            appname: this._getValidAppName(path.basename(process.cwd()))
+            curFolderName: this._getValidAppName(path.basename(process.cwd()))
         };
 
         //this.appPath = this.env.options.appPath;
@@ -41,10 +42,16 @@ module.exports = generators.Base.extend({
         // 欢迎界面
         console.log(yosay("Welcome to the " + chalk.red("GruntH5") + " generator"));
 
+        // https://github.com/helinjiang/generator-grunt-h5/issues/1
+        // 如果当前文件夹下还有其他的文件（包括隐藏文件），则需要提示一下！
+        if (fs.readdirSync(this.destinationRoot()).length) {
+            console.log(chalk.yellow("Warning! This directory you want to scaffold into already exist files or folders! Please be careful!\n"));
+        }
+
         var prompts = [{
             name: "appname", // 应用名称，最终会将生成小驼峰结果
             message: "What's the name of your app?",
-            "default": this.defaultOption.appname
+            "default": this.defaultOption.curFolderName
         }, {
             name: 'author', // 作者
             message: 'Author:',
@@ -206,9 +213,9 @@ module.exports = generators.Base.extend({
 
         // 如果有--lazy选项，则不再自动运行 npm install & bower install
         if (this.lazyInstall) {
-            this.log('You should run ' + chalk.yellow(strInstall) + ' yourself to install the required dependencies!');
+            this.log('\nYou should run ' + chalk.yellow(strInstall) + ' yourself to install the required dependencies!');
         } else {
-            this.log('Install ' + str + ' ... ');
+            this.log('\nInstall ' + str + ' ... ');
 
             this.installDependencies({
                 callback: function () {
